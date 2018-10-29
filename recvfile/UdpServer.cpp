@@ -3,7 +3,7 @@
 #include <string.h>
 #include <cstdio>
 
-udp_server::udp_server(const std::string& addr, int port) : f_port(port), f_addr(addr) {
+UdpServer::UdpServer(const std::string& addr, int port) : f_port(port), f_addr(addr) {
     char decimal_port[16];
     snprintf(decimal_port, sizeof(decimal_port), "%d", f_port);
     decimal_port[sizeof(decimal_port) / sizeof(decimal_port[0]) - 1] = '\0';
@@ -32,31 +32,31 @@ udp_server::udp_server(const std::string& addr, int port) : f_port(port), f_addr
     }
 }
 
-udp_server::~udp_server() {
+UdpServer::~UdpServer() {
     freeaddrinfo(f_addrinfo);
     close(f_socket);
 }
 
-int udp_server::getSocket() const {
+int UdpServer::getSocket() const {
     return f_socket;
 }
 
-int udp_server::getPort() const {
+int UdpServer::getPort() const {
     return f_port;
 }
 
-string udp_server::getAddr() const {
+string UdpServer::getAddr() const {
     return f_addr;
 }
 
-int udp_server::recv(char *msg, size_t max_size) {
+int UdpServer::recv(char *msg, size_t max_size) {
     return ::recv(f_socket, msg, max_size, 0);
 }
 
-int udp_server::recvfrom(char *msg, size_t max_size, sockaddr_in& sender, uint& senderaddrsize) {
+int UdpServer::recvfrom(char *msg, size_t max_size, sockaddr_in& sender, uint& senderaddrsize) {
     return ::recvfrom(f_socket, msg, max_size, 0, (sockaddr*) &sender, &senderaddrsize);
 }
 
-int udp_server::send(const char *msg, size_t size, sockaddr_in dest) {
+int UdpServer::send(const char *msg, size_t size, sockaddr_in dest) {
     return sendto(f_socket, msg, size, 0, (sockaddr*) &dest, sizeof(dest));
 }

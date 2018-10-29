@@ -18,15 +18,15 @@ public:
     Receiver(int, int);
     ~Receiver();
 
-    void sendack(int);
+    void sendack(int, bool);
 
     void listen();
 
 private:
 	int len;
-	int RWS;
+	int rws;
 	int buffersize;
-	udp_server rserver;
+	UdpServer rserver;
 	sockaddr_in recvaddr;
 	std::vector<Packet> datastorage;
 };

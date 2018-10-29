@@ -14,7 +14,7 @@ Packet::Packet(char * recvbuf) {
 		chksum = recvbuf[9+len];
 
 		validchksum = (chksum == checksum(recvbuf, len+9));
-	} else if (header == 0x06) {
+	} else if (header == 0x06 || header == 0x07) {
 		memcpy(&seqnum, recvbuf+1, 4);
 		chksum = recvbuf[5];		
 		validchksum = (chksum == checksum(recvbuf, 5));
@@ -87,6 +87,9 @@ void Packet::createBuffer() {
 		case 0x06 :
 			bLen += 6;
 			break;
+		case 0x07 :
+			bLen += 6;
+			break;
 	}
 
 	buffer = new char[bLen];
@@ -99,6 +102,8 @@ void Packet::createBuffer() {
 			memcpy(buffer+9, data, len);
 			break;
 		case 0x06 :
+			break;
+		case 0x07 :
 			break;
 	}
 

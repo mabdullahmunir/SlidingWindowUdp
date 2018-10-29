@@ -9,11 +9,11 @@
 using namespace std;
 
 
-class udp_server
+class UdpServer
 {
 public:
-    udp_server(const std::string& addr, int port);
-    ~udp_server();
+    UdpServer(const std::string& addr, int port);
+    ~UdpServer();
 
     int getSocket() const;
     int getPort() const;
