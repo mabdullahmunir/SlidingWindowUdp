@@ -1,7 +1,7 @@
 #ifndef RECEIVER_H
 #define RECEIVER_H
 
-#define BUFFER_SIZE 2048
+#define BUFFER_SIZE 10
 
 #include <stdio.h>
 #include <string.h>
@@ -19,8 +19,10 @@ public:
     ~Receiver();
 
     void sendack(int, bool);
+    void saveToFile(char *);
 
     void listen();
+
 
 private:
 	int len;

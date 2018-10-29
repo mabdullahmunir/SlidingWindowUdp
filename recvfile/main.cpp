@@ -9,5 +9,6 @@ int main(int argc, char const *argv[])
 {
 	Receiver r(PORT, WINDOWSIZE);
 	r.listen();
+	r.saveToFile("hmmm");
 	return 0;
 }

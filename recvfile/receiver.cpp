@@ -15,31 +15,43 @@ void Receiver::sendack(int seq, bool status) {
 	} else {
 		p.setHeader(0x07);
 	}
+
 	p.setSeqNum(seq);
 
 	p.createBuffer();
-	char * data = p.getBuffer();
 
-	rserver.send(data, 6, recvaddr);
+	rserver.send(p.getBuffer(), 6, recvaddr);
+}
+
+void Receiver::saveToFile(char * filename) {
+	FILE * fout = fopen(filename, "wb");
+
+	for (int i=0; i<datastorage.size(); i++) {
+		fwrite(datastorage[i].getData(), sizeof(char), datastorage[i].getLen(), fout);
+	}
+
+	fclose(fout);
 }
 
 void Receiver::listen() {
 	uint recvaddrlen = sizeof(sockaddr_in);
-	char msgrecv[BUFFER_SIZE];
+	char msgrecv[BUFFER_SIZE+10];
 
 	while (true) {
-		if (rserver.recvfrom(msgrecv, BUFFER_SIZE, recvaddr, recvaddrlen) > 0) {
+		if (rserver.recvfrom(msgrecv, BUFFER_SIZE+10, recvaddr, recvaddrlen) > 0) {
 			Packet precv(msgrecv);
 
 			printf("[+] Received new packet\n");
 
 			if (precv.isValid()) {
 				if (precv.getLen() == 0) {
+					this->sendack(0, true);
 					printf("[+] End of packet found\n");
 					break;
 				}
 				datastorage.push_back(precv);
-				this->sendack(++rws, true);
+				this->sendack(precv.getSeqNum(), true);
+				printf("[+] Receive Packet No. %d\n", precv.getSeqNum());
 				printf("[+] Sending ACK\n");
 			} else {
 				this->sendack(precv.getSeqNum(), false);
