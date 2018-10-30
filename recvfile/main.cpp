@@ -5,10 +5,11 @@
 #define PORT 50000
 #define WINDOWSIZE 4
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
-	Receiver r(PORT, WINDOWSIZE);
+	char ip[] = "0.0.0.0";
+	Receiver r(ip, atoi(argv[4]), atoi(argv[2]));
 	r.listen();
-	r.saveToFile("hmmm");
+	r.saveToFile(argv[1]);
 	return 0;
 }

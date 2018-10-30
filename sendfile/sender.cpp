@@ -1,6 +1,6 @@
 #include "sender.h"
 
-Sender::Sender(int port, int windowsize) : rclient("127.0.0.1", port) {
+Sender::Sender(char * ip, int port, int windowsize) : rclient(ip, port) {
 	this->windowsize = windowsize;
 	lws = 0;
 	status = true;
@@ -53,6 +53,9 @@ void Sender::slider() {
 	int i;
 
 	while (true) {
+
+		mtx.lock();
+
 		for (i=0; i<windowsize; i++) {
 			if (lws+i >= len) {
 				continue;
@@ -61,16 +64,20 @@ void Sender::slider() {
 					printf("[+] Send Packet No. %d\n", lws+i+1);
 					rclient.send(datastorage[lws+i].getBuffer(), datastorage[lws+i].getLen()+10);
 					acks[lws+i] = TIMEOUT;
-				} else {
+				} else if (acks[lws+i] > 0) {
 					acks[lws+i]--;
 				}
 			}
 		}
 
+		mtx.unlock();
+
 		if (lws >= len)
 			break;
-		sleep(1);
+
+		sleep(2);
 	}
+
 
 	while (true) {
 		if (acks[lws] == 0) {
@@ -82,7 +89,6 @@ void Sender::slider() {
 
 		if (!status)
 			break;
-		sleep(1);
 	}
 }
 
@@ -95,6 +101,8 @@ void* Sender::listener(void * tSender) {
 			Packet precv(msgrecv);
 
 			printf("[+] Received new packet\n");
+
+			gSender->mtx.lock();
 
 			if (precv.isValid()) {
 
@@ -114,6 +122,8 @@ void* Sender::listener(void * tSender) {
 			while (gSender->acks[gSender->lws] == -1) {
 				gSender->lws++;
 			}
+
+			gSender->mtx.unlock();
 
 		}
 	}

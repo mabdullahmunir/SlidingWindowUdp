@@ -1,8 +1,8 @@
 #ifndef SENDER_H
 #define SENDER_H
 
-#define BUFFER_SIZE 10
-#define TIMEOUT 5
+#define BUFFER_SIZE 1024
+#define TIMEOUT 2
 
 #include <stdio.h>
 #include <string.h>
@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <algorithm>
 #include <vector>
+#include <mutex>
 #include "utility.h"
 #include "UdpClient.h"
 #include "packet.h"
@@ -17,7 +18,7 @@
 class Sender
 {
 public:
-    Sender(int, int);
+    Sender(char *, int, int);
     ~Sender();
 
     void readFile(char *);
@@ -33,6 +34,7 @@ private:
 	int buffersize;
 	bool status;
 	UdpClient rclient;
+	std::mutex mtx;
 	std::vector<Packet> datastorage;
 	std::vector<int> acks;
 };

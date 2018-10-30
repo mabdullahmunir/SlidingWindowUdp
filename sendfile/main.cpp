@@ -5,10 +5,10 @@
 #define PORT 50000
 #define WINDOWSIZE 4
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
-	Sender s(PORT, WINDOWSIZE);
-	s.readFile("sender.h");
+	Sender s(argv[4], atoi(argv[5]), atoi(argv[2]));
+	s.readFile(argv[1]);
 	pthread_t th;
 	pthread_create(&th, NULL, s.listener, &s);
 	s.slider();

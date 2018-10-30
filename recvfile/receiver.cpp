@@ -1,6 +1,6 @@
 #include "receiver.h"
 
-Receiver::Receiver(int port, int windowsize) : rserver("127.0.0.1", port) {
+Receiver::Receiver(char* ip, int port, int windowsize) : rserver(ip, port) {
 	rws = windowsize;
 }
 
@@ -25,6 +25,8 @@ void Receiver::sendack(int seq, bool status) {
 
 void Receiver::saveToFile(char * filename) {
 	FILE * fout = fopen(filename, "wb");
+
+	sort(datastorage.begin(), datastorage.end());
 
 	for (int i=0; i<datastorage.size(); i++) {
 		fwrite(datastorage[i].getData(), sizeof(char), datastorage[i].getLen(), fout);

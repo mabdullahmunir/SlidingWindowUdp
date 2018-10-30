@@ -1,7 +1,7 @@
 #ifndef RECEIVER_H
 #define RECEIVER_H
 
-#define BUFFER_SIZE 10
+#define BUFFER_SIZE 1024
 
 #include <stdio.h>
 #include <string.h>
@@ -15,7 +15,7 @@
 class Receiver
 {
 public:
-    Receiver(int, int);
+    Receiver(char *, int, int);
     ~Receiver();
 
     void sendack(int, bool);
