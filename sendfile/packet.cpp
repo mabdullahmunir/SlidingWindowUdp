@@ -107,6 +107,13 @@ void Packet::setData(char * pData, int pLen) {
 	memcpy(data, pData, len);
 }
 
+void Packet::printPacket() {
+	printf("------------------\n");
+	printf("Packet : %d\n", getSeqNum());
+	printf("%d\n", getLen());
+	printf("------------------\n");
+}
+
 bool Packet::operator<(Packet const& pPacket) {
 	return (this->getSeqNum() < pPacket.getSeqNum());
 }

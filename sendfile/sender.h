@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <algorithm>
+#include <deque>
 #include <vector>
 #include <mutex>
 #include "UdpClient.h"
@@ -17,11 +18,14 @@
 class Sender
 {
 public:
-    Sender(char *, int, int);
+    Sender(char *, int, int, int);
     ~Sender();
 
     void openFile(char *);
     void readFile(char *);
+    void closeFile();
+
+    void fillBuffer();
 
     void slider();
 
@@ -31,12 +35,14 @@ private:
 	FILE * fin;
 	int len;
 	int lws;
+	int lastbuffer;
+	int rbuffer;
 	int windowsize;
 	int buffersize;
 	bool status;
 	UdpClient rclient;
 	std::mutex mtx;
-	std::vector<Packet> datastorage;
+	std::deque<Packet> datastorage;
 	std::vector<int> acks;
 };
 

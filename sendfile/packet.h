@@ -24,6 +24,7 @@ public:
     void setHeader(unsigned char);
     void setSeqNum(int);
     void setData(char *, int);
+    void printPacket();
     
     bool operator<(Packet const&);
 
