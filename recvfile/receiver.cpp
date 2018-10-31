@@ -9,6 +9,7 @@ Receiver::~Receiver() {
 }
 
 void Receiver::sendack(int seq, bool status) {
+	char buffer[BUFFER_SIZE+10];
 	Packet p;
 	if (status) {
 		p.setHeader(0x06);
@@ -18,9 +19,9 @@ void Receiver::sendack(int seq, bool status) {
 
 	p.setSeqNum(seq);
 
-	p.createBuffer();
+	p.getBuffer(buffer);
 
-	rserver.send(p.getBuffer(), 6, recvaddr);
+	rserver.send(buffer, 6, recvaddr);
 }
 
 void Receiver::saveToFile(char * filename) {

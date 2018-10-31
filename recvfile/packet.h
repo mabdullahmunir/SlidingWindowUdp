@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "utility.h"
 
 class Packet
 {
@@ -15,20 +14,20 @@ public:
 
     unsigned char getHeader() const;
     int getSeqNum() const;
-    char* getData() const;
     int getLen() const;
     unsigned char getChkSum() const;
-    char* getBuffer() const;
+    char* getData() const;
 
     bool isValid() const;
+    bool getBuffer(char*);
 
     void setHeader(unsigned char);
     void setSeqNum(int);
     void setData(char *, int);
     
-    void createBuffer();
-
     bool operator<(Packet const&);
+
+    static unsigned char checksum(char* data, int len);
 
 private:
 	unsigned char header;

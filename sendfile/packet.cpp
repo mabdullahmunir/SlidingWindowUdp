@@ -35,10 +35,6 @@ int Packet::getSeqNum() const {
 	return seqnum;
 }
 
-char* Packet::getData() const {
-	return data;
-}
-
 int Packet::getLen() const {
 	return len;
 }
@@ -47,12 +43,55 @@ unsigned char Packet::getChkSum() const {
 	return chksum;
 }
 
-char* Packet::getBuffer() const {
-	return buffer;
+char* Packet::getData() const {
+	return data;
 }
 
 bool Packet::isValid() const {
 	return validchksum;
+}
+
+bool Packet::getBuffer(char * buff) {
+	int bLen = len;
+
+	if (getHeader() == 0)
+		return false;
+	if (getHeader() == 0x01) {
+		if (getLen() == -1)
+			return false;
+		if (getSeqNum() == 0)
+			return false;
+	}
+
+	switch (getHeader()) {
+		case 0x01 :
+			bLen += 10;
+			break;
+		case 0x06 :
+			bLen = 6;
+			break;
+		case 0x07 :
+			bLen = 6;
+			break;
+	}
+
+	memcpy(buff, &header, 1);
+	memcpy(buff+1, &seqnum, 4);
+
+	switch (getHeader()) {
+		case 0x01 :
+			memcpy(buff+5, &len, 4);
+			memcpy(buff+9, data, len);
+			break;
+		case 0x06 :
+			break;
+		case 0x07 :
+			break;
+	}
+
+	chksum = checksum(buff, bLen-1);
+
+	memcpy(buff+bLen-1, &chksum, 1);
 }
 
 void Packet::setHeader(unsigned char pHeader) {
@@ -68,50 +107,15 @@ void Packet::setData(char * pData, int pLen) {
 	memcpy(data, pData, len);
 }
 
-void Packet::createBuffer() {
-	int bLen = len;
-
-	if (getHeader() == 0)
-		return;
-	if (getHeader() == 0x01) {
-		if (getLen() == -1)
-			return;
-		if (getSeqNum() == 0)
-			return;
-	}
-
-	switch (getHeader()) {
-		case 0x01 :
-			bLen += 10;
-			break;
-		case 0x06 :
-			bLen = 6;
-			break;
-		case 0x07 :
-			bLen = 6;
-			break;
-	}
-
-	buffer = new char[bLen];
-	memcpy(buffer, &header, 1);
-	memcpy(buffer+1, &seqnum, 4);
-
-	switch (getHeader()) {
-		case 0x01 :
-			memcpy(buffer+5, &len, 4);
-			memcpy(buffer+9, data, len);
-			break;
-		case 0x06 :
-			break;
-		case 0x07 :
-			break;
-	}
-
-	chksum = checksum(buffer, bLen-1);
-
-	memcpy(buffer+bLen-1, &chksum, 1);
-}
-
 bool Packet::operator<(Packet const& pPacket) {
 	return (this->getSeqNum() < pPacket.getSeqNum());
+}
+
+unsigned char Packet::checksum(char* data, int len) {
+	unsigned long int sum = 0;
+	for (int i=0; i<len; i++) {
+		sum += data[i];
+	}
+	sum = sum ^ 0xFF;
+	return sum;
 }

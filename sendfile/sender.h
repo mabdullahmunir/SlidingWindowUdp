@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <vector>
 #include <mutex>
-#include "utility.h"
 #include "UdpClient.h"
 #include "packet.h"
 
@@ -21,6 +20,7 @@ public:
     Sender(char *, int, int);
     ~Sender();
 
+    void openFile(char *);
     void readFile(char *);
 
     void slider();
@@ -28,6 +28,7 @@ public:
     static void *listener(void *);
 
 private:
+	FILE * fin;
 	int len;
 	int lws;
 	int windowsize;
