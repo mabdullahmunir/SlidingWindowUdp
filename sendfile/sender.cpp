@@ -142,7 +142,7 @@ void Sender::slider() {
 			break;
 	}
 
-	sleep(0.5);
+	sleep(1);
 }
 
 void* Sender::listener(void * tSender) {
