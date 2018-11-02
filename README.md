@@ -6,6 +6,17 @@ Senapati Sang Diwangkara - 13516107
 Restu Wahyu Kartiko - 13516155
 
 ## 2. Petunjuk Penggunaan Program
+#### Receiver
+```
+./recvfile <filename> <windowsize> <bufferlength> <port_to_open>
+```
+
+#### Sender
+```
+./sendfile <filename> <windowsize> <bufferlength> <receiver_ip> <receiver_port>
+```
+
+
 
 ## 3. Cara Kerja Sliding Window
 ### Sender
@@ -45,6 +56,6 @@ listener | sender.cpp : menerima ACK dan menerima NACK. Jika menerima NACK, maka
 Sisa fungsi yang ada adalah getter dan setter untuk tiap atribut pada class
 
 ## 5. Pembagian Tugas
-13516074 :
-13516107 :
-13516155 :
+13516074 : UDP base code, sender sliding window
+13516107 : Receiver sliding window
+13516155 : Laporan dan per-CP-an
