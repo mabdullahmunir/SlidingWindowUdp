@@ -38,7 +38,7 @@ private:
 	int lastbuffer;
 	int rbuffer;
 	int windowsize;
-	int buffersize;
+	int bufferlength;
 	bool status;
 	UdpClient rclient;
 	std::mutex mtx;

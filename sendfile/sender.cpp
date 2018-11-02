@@ -1,8 +1,8 @@
 #include "sender.h"
 
-Sender::Sender(char * ip, int port, int windowsize, int buffersize) : rclient(ip, port) {
+Sender::Sender(char * ip, int port, int windowsize, int bufferlength) : rclient(ip, port) {
 	this->windowsize = windowsize;
-	this->buffersize = buffersize;
+	this->bufferlength = bufferlength;
 	lws = 0;
 	lastbuffer = 0;
 	rbuffer = 0;
@@ -64,7 +64,7 @@ void Sender::closeFile() {
 
 void Sender::fillBuffer() {
 
-	while (datastorage.size() < buffersize && lastbuffer < len) {
+	while (datastorage.size() < bufferlength && lastbuffer < len) {
 		int nread;
 		Packet p;
 		char data[BUFFER_SIZE];
@@ -78,7 +78,7 @@ void Sender::fillBuffer() {
 		acks.push_back(0);	
 	}
 
-	if (lastbuffer == len && datastorage.size() < buffersize) {
+	if (lastbuffer == len && datastorage.size() < bufferlength) {
 		char temp[1];
 		Packet p1;
 		p1.setHeader(0x01);

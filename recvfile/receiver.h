@@ -7,29 +7,31 @@
 #include <string.h>
 #include <stdlib.h>
 #include <algorithm>
-#include <vector>
+#include <deque>
 #include "UdpServer.h"
 #include "packet.h"
 
 class Receiver
 {
 public:
-    Receiver(char *, int, int);
+    Receiver(int, int, char *, int);
     ~Receiver();
 
+	void openFile(char *);
+	void writeFile();
+	void closeFile();
     void sendack(int, bool);
-    void saveToFile(char *);
 
     void listen();
 
 
 private:
-	int len;
+	FILE * fout;
 	int rws;
-	int buffersize;
+	int bufferlength;
 	UdpServer rserver;
 	sockaddr_in recvaddr;
-	std::vector<Packet> datastorage;
+	std::deque<Packet> datastorage;
 };
 
 #endif
