@@ -126,6 +126,8 @@ void Sender::slider() {
 
 		if (lws >= len)
 			break;
+
+		sleep(1);
 	}
 
 	while (true) {

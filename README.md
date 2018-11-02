@@ -59,3 +59,6 @@ Sisa fungsi yang ada adalah getter dan setter untuk tiap atribut pada class
 13516074 : UDP base code, sender sliding window
 13516107 : Receiver sliding window
 13516155 : Laporan dan per-CP-an
+
+## 6. Screenshot
+![](Screenshot.png)
