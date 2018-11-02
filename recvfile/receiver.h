@@ -28,10 +28,12 @@ public:
 private:
 	FILE * fout;
 	int rws;
+	int rw_start; // all sqnum < rws_start has been received
 	int bufferlength;
 	UdpServer rserver;
 	sockaddr_in recvaddr;
 	std::deque<Packet> datastorage;
+	std::deque<Packet> windowstorage;
 };
 
 #endif

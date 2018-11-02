@@ -18,7 +18,7 @@
 class Sender
 {
 public:
-    Sender(char *, int, int, int);
+    Sender(int, int, char *, int);
     ~Sender();
 
     void openFile(char *);

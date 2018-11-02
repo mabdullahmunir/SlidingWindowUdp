@@ -1,6 +1,6 @@
 #include "sender.h"
 
-Sender::Sender(char * ip, int port, int windowsize, int bufferlength) : rclient(ip, port) {
+Sender::Sender(int windowsize, int bufferlength, char * ip, int port) : rclient(ip, port) {
 	this->windowsize = windowsize;
 	this->bufferlength = bufferlength;
 	lws = 0;
@@ -25,15 +25,8 @@ void Sender::openFile(char * filename) {
 
 void Sender::readFile(char * filename) {
 	int i;
-	FILE * fin = fopen(filename, "rb");
 
-	fseek(fin, 0, SEEK_END);
-	unsigned long int size = ftell(fin);
-	fseek(fin, 0, SEEK_SET);
-
-	len = (size / BUFFER_SIZE) + 1;
-
-	for (i = 0; i<len; i++) {
+	for (int i = 0; i<len; i++) {
 		int nread;
 		Packet p;
 		char data[BUFFER_SIZE];
@@ -107,7 +100,7 @@ void Sender::slider() {
 				continue;
 			} else {
 				if (acks[lws+i] == 0) {
-					printf("[+] Send Packet No. %d\n", lws+i+1);
+					printf("[+] Sending Packet No. %d\n", lws+i+1);
 					datastorage[lws+i-rbuffer].getBuffer(buffer);
 					rclient.send(buffer, datastorage[lws+i-rbuffer].getLen()+10);
 					acks[lws+i] = TIMEOUT;
@@ -133,8 +126,6 @@ void Sender::slider() {
 
 		if (lws >= len)
 			break;
-
-		sleep(2);
 	}
 
 	while (true) {
@@ -150,6 +141,8 @@ void Sender::slider() {
 		if (!status)
 			break;
 	}
+
+	sleep(0.5);
 }
 
 void* Sender::listener(void * tSender) {
@@ -166,7 +159,7 @@ void* Sender::listener(void * tSender) {
 
 			if (precv.isValid()) {
 
-				printf("[+] Get ACK %d\n", precv.getSeqNum());
+				printf("[+] That packet is ACK %d\n", precv.getSeqNum());
 
 				if (precv.getSeqNum() == 0) {
 					gSender->status = false;

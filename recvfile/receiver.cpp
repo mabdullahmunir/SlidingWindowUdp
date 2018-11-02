@@ -2,6 +2,7 @@
 
 Receiver::Receiver(int windowsize, int bufferlength, char* ip, int port) : rserver(ip, port) {
 	rws = windowsize;
+	rw_start = 1;
 	this->bufferlength = bufferlength;
 }
 
@@ -53,6 +54,11 @@ void Receiver::listen() {
 						break;
 					}
 					printf("[+] Receive Packet No. %d\n", precv.getSeqNum());
+					//if (precv.getSeqNum() < rw_start || precv.getSeqNum() >= rw_start + rws) continue;
+					//windowstorage[precv.getSeqNum() - rw_start] = precv;
+					// Check whether rw_start, ... , precv.getSeqNum() is all true
+					if (precv.getSeqNum() != rw_start) continue;
+					++rw_start;
 					datastorage.push_back(precv);
 					printf("[+] Sending ACK\n");
 					this->sendack(precv.getSeqNum(), true);
